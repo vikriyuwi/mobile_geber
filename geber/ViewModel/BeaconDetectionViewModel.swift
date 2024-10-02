@@ -76,7 +76,7 @@ class BeaconDetectionViewModel: NSObject, ObservableObject, CLLocationManagerDel
         if let foundBeacon = beacons.first {
             
             if foundBeacon.rssi < 0 {
-                if var location = beaconLocations.first(
+                if let location = beaconLocations.first(
                     where: {
                         $0.identifier == foundBeacon.uuid.uuidString &&
                         $0.major == foundBeacon.major.intValue &&

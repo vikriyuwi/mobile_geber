@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 import CoreLocation
+import LocalAuthentication
 
 class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var locationManager: CLLocationManager?
@@ -18,6 +19,27 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     @Published var timer:Timer?
     @Published var timeRemaining:TimeInterval = 10
+    
+    private func setTimer() {
+        withAnimation(.spring().delay(0.5)){
+            isSent = true
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
+                if self.timeRemaining > 0 {
+                    self.timeRemaining -= 1
+                } else {
+                    self.stopTimer()
+                }
+            }
+        }
+    }
+    
+    private func stopTimer() {
+        withAnimation(.spring()){
+            isSent = false
+            timer?.invalidate()
+            timeRemaining = 10
+        }
+    }
     
     var beaconLocations: [BeaconModel] = [
         BeaconModel(identifier: "EF63C140-2AF4-4E1E-AAB3-340055B3BB4B", major: 0, minor: 0, location: "S01", detailLocation: "A01-A05"),
@@ -81,7 +103,7 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         if let foundBeacon = beacons.first {
             
             if foundBeacon.rssi < 0 {
-                if var location = beaconLocations.first(
+                if let location = beaconLocations.first(
                     where: {
                         $0.identifier == foundBeacon.uuid.uuidString &&
                         $0.major == foundBeacon.major.intValue &&
@@ -102,6 +124,37 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             } else {
                 currentNearestLocation = nil
             }
+        }
+    }
+    
+    func authenticate() -> Bool {
+        let context = LAContext()
+        var error: NSError?
+        var result = false
+
+        // check whether biometric authentication is possible
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            // it's possible, so go ahead and use it
+            let reason = "Face ID or Touch ID is required to send a help request"
+
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
+                // authentication has now completed
+                if success {
+                    result = true
+                } else {
+                    result = false
+                }
+            }
+            
+            return result
+        } else {
+            return true
+        }
+    }
+    
+    func sendHelpRequest() {
+        if authenticate() {
+            setTimer()
         }
     }
 }
