@@ -10,7 +10,9 @@ import SwiftUI
 struct VehicleInformationPage: View {
     @State private var showingNameSheet = false
     @State private var showingNewVehicleSheet = false
+    
     @State private var showDeleteAlert = false
+    @State var showEmptyAlert = false
     
     @StateObject private var viewModel = VehicleInformationViewModel()
     
@@ -38,55 +40,74 @@ struct VehicleInformationPage: View {
                                 HStack {
                                     Text("Name")
                                     Spacer()
-                                    Text("Fikri Yuwi")
+                                    Text(viewModel.username)
+                                        .foregroundStyle(viewModel.username != viewModel.usernameDefault ? .primary : .secondary)
                                     Image(systemName: "chevron.right")
                                 }
                             }
                         }
                         
                         Section(header: Text("Vehicle in user")) {
-                            HStack(alignment:.top) {
-                                VStack(alignment: .leading) {
-                                    HStack {
-                                        Text("Aerox")
-                                            .font(.title3.bold())
-                                        Text("black")
-                                            .font(.footnote)
-                                            .foregroundStyle(.white)
-                                            .padding(.vertical, 4)
-                                            .padding(.horizontal, 8)
-                                            .background(.black)
-                                            .cornerRadius(10)
+                            if viewModel.vehicleActive.Model != viewModel.vehicleAttributeActiveDefault {
+                                HStack(alignment:.top) {
+                                    VStack(alignment: .leading) {
+                                        HStack {
+                                            Text(viewModel.vehicleActive.Model)
+                                                .font(.title3.bold())
+                                            Text(viewModel.vehicleActive.Color)
+                                                .font(.footnote)
+                                                .foregroundStyle(.white)
+                                                .padding(.vertical, 4)
+                                                .padding(.horizontal, 8)
+                                                .background(.black)
+                                                .cornerRadius(10)
+                                        }
+                                        Text(viewModel.vehicleActive.PlateNumber)
                                     }
-                                    Text("B 2103 UB")
+                                    Spacer()
+                                    Button {
+                                        viewModel.deleteVehicleActive()
+                                    } label: {
+                                        Image(systemName: "xmark")
+                                    }
                                 }
-                                Spacer()
+                                .padding(.vertical,10)
+                                .listRowBackground(Color.accent)
+                                .foregroundStyle(.textDark)
+                            } else {
+                                Text("No active vehicle")
+                                    .foregroundStyle(.secondary)
                             }
-                            .padding(.vertical,10)
-                            .listRowBackground(Color.accent)
-                            .foregroundStyle(.textDark)
+                        }
+                        Section {
+                            Text("Click on a vehicle below to set it as your active vehicle")
+                                .foregroundStyle(.secondary)
+                                .listRowBackground(Color.backgroundTheme)
                         }
                         Section(header: Text("VEHICLE LIST")) {
                             ForEach(viewModel.vehicles, id:\.self) { vehicle in
-                                VehicleListItem(vehicle: vehicle)
-                                    .swipeActions(edge: .trailing) {
-                                        Button {
-                                            showDeleteAlert = true
-                                        } label: {
-                                            Image(systemName: "trash")
+                                if vehicle.PlateNumber != viewModel.vehicleActive.PlateNumber {
+                                    VehicleListItem(vehicle: vehicle)
+                                        .swipeActions(edge: .trailing) {
+                                            Button {
+                                                showDeleteAlert = true
+                                            } label: {
+                                                Image(systemName: "trash")
+                                            }
+                                            .tint(.red)
                                         }
-                                        .tint(.red)
-                                    }
-                                    .alert(isPresented: $showDeleteAlert) {
-                                        Alert(
-                                            title: Text("Delete \(vehicle.Model)?"),
-                                            message: Text("Are you sure you want to delete \(vehicle.Model) \(vehicle.PlateNumber)?"),
-                                            primaryButton: .destructive(Text("Delete")) {
-                                                viewModel.deleteVehicle(vehicle)
-                                            },
-                                            secondaryButton: .cancel()
-                                        )
-                                    }
+                                        .alert(isPresented: $showDeleteAlert) {
+                                            Alert(
+                                                title: Text("Delete \(vehicle.Model)?"),
+                                                message: Text("Are you sure you want to delete \(vehicle.Model) \(vehicle.PlateNumber)?"),
+                                                primaryButton: .destructive(Text("Delete")) {
+                                                    viewModel.deleteVehicle(vehicle)
+                                                },
+                                                secondaryButton: .cancel()
+                                            )
+                                        }
+                                        .environmentObject(viewModel)
+                                }
                             }
                             Button {
                                 showingNewVehicleSheet.toggle()
@@ -106,13 +127,16 @@ struct VehicleInformationPage: View {
         .frame(width: .infinity, height: .infinity)
         .navigationViewStyle(.stack)
         .toolbarBackground(.backgroundTheme)
+        
         .sheet(isPresented: $showingNameSheet) {
             NameSheetView(showingNameSheet: $showingNameSheet)
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.medium,.large])
+                .environmentObject(viewModel)
         }
         .sheet(isPresented: $showingNewVehicleSheet) {
             NewVehicleSheetView(showingNewVehicleSheet: $showingNewVehicleSheet)
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.medium,.large])
+                .environmentObject(viewModel)
         }
     }
 }

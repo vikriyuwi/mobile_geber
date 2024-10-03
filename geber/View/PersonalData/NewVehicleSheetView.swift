@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct NewVehicleSheetView: View {
-    @StateObject var viewModel = NewVehicleSheetViewModel()
+    @EnvironmentObject var viewModel: VehicleInformationViewModel
     
     @Binding var showingNewVehicleSheet: Bool
     
-    @State var vehicleModel: String = ""
-    @State var vehiclePlateNumber: String = ""
-    @State var vehicleColor: VehicleColor = VehicleColor.white
+    @State private var vehicleModel: String = ""
+    @State private var vehiclePlateNumber: String = ""
+    @State private var vehicleColor: String = "Placeholder"
+    
+    @State private var showFormInvalid: Bool = false
     
     var body: some View {
         VStack {
@@ -28,10 +30,14 @@ struct NewVehicleSheetView: View {
                 }
                 Spacer()
                 Button {
-                    viewModel.saveVehicle(vehicleModel, vehiclePlateNumber, vehicleColor)
-                    
-                    resetForm()
-                    showingNewVehicleSheet.toggle()
+                    if isNotEmpty() {
+                        viewModel.saveVehicle(vehicleModel, vehiclePlateNumber, vehicleColor)
+                        
+                        resetForm()
+                        showingNewVehicleSheet.toggle()
+                    } else {
+                        showFormInvalid.toggle()
+                    }
                 } label: {
                     Text("Done")
                         .fontWeight(.bold)
@@ -47,23 +53,30 @@ struct NewVehicleSheetView: View {
                     TextField("Plate number", text: $vehiclePlateNumber)
                         .background(.backgroundGroup)
                     Picker("Color", selection: $vehicleColor) {
-                        Text("Black").tag(VehicleColor.black)
-                        Text("Blue").tag(VehicleColor.blue)
-                        Text("Brown").tag(VehicleColor.brown)
-                        Text("Green").tag(VehicleColor.green)
-                        Text("Grey").tag(VehicleColor.grey)
-                        Text("Orange").tag(VehicleColor.orange)
-                        Text("Pink").tag(VehicleColor.pink)
-                        Text("Purple").tag(VehicleColor.purple)
-                        Text("Red").tag(VehicleColor.red)
-                        Text("Silver").tag(VehicleColor.silver)
-                        Text("White").tag(VehicleColor.white)
-                        Text("Yellow").tag(VehicleColor.yellow)
+                        Text("Select color").tag("Placeholder")
+                        Text("Black").tag("Black")
+                        Text("Blue").tag("Blue")
+                        Text("Brown").tag("Brown")
+                        Text("Green").tag("Green")
+                        Text("Grey").tag("Grey")
+                        Text("Orange").tag("Orange")
+                        Text("Pink").tag("Pink")
+                        Text("Purple").tag("Purple")
+                        Text("Red").tag("Red")
+                        Text("Silver").tag("Silver")
+                        Text("White").tag("White")
+                        Text("Yellow").tag("Yellow")
                     }
                 }
             }
             .scrollContentBackground(.hidden)
-            
+            .alert(isPresented: $showFormInvalid) {
+                Alert(
+                    title: Text("Invalid form"),
+                    message: Text("Make sure you filled all fields"),
+                    dismissButton: .default(Text("Ok"))
+                )
+            }
         }
         .background(.backgroundTheme)
     }
@@ -71,7 +84,14 @@ struct NewVehicleSheetView: View {
     func resetForm() {
         vehicleModel = ""
         vehiclePlateNumber = ""
-        vehicleColor = .white
+        vehicleColor = ""
+    }
+    
+    func isNotEmpty() -> Bool {
+        if (!vehicleModel.isEmpty && !vehiclePlateNumber.isEmpty) && vehicleColor != "Placeholder" {
+            return true
+        }
+        return false
     }
 }
 

@@ -7,12 +7,18 @@
 import SwiftUI
 
 struct NameSheetView: View {
+    @EnvironmentObject var viewModel: VehicleInformationViewModel
+    
     @Binding var showingNameSheet: Bool
+    @State var username: String = ""
+    
+    @State private var showNameInvalid: Bool = false
     
     var body: some View {
         VStack {
             HStack {
                 Button {
+                    username = ""
                     showingNameSheet.toggle()
                 } label: {
                     Text("Cancel")
@@ -20,7 +26,13 @@ struct NameSheetView: View {
                 }
                 Spacer()
                 Button {
-                    showingNameSheet.toggle()
+                    if !username.isEmpty {
+                        viewModel.saveUsername(username)
+                        username = ""
+                        showingNameSheet.toggle()
+                    } else {
+                        showNameInvalid.toggle()
+                    }
                 } label: {
                     Text("Done")
                         .fontWeight(.bold)
@@ -30,13 +42,19 @@ struct NameSheetView: View {
             .padding(.horizontal,20)
             .padding(.top,20)
             Form {
-                Section(header: Text("Your name")) {
-                    TextField("Name", text: .constant(""))
+                Section(header: Text("New name")) {
+                    TextField("Name", text: $username)
                         .background(.backgroundGroup)
                 }
             }
             .scrollContentBackground(.hidden)
-            
+            .alert(isPresented: $showNameInvalid) {
+                Alert(
+                    title: Text("Invalid name"),
+                    message: Text("Make sure you filled the field"),
+                    dismissButton: .default(Text("Ok"))
+                )
+            }
         }
         .background(.backgroundTheme)
     }

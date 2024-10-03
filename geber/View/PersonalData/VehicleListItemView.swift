@@ -7,11 +7,12 @@
 import SwiftUI
 
 struct VehicleListItem: View {
+    @EnvironmentObject var viewModel: VehicleInformationViewModel
     @State var vehicle: VehicleModel
     
     var body: some View {
         Button {
-            
+            viewModel.saveVehicleActive(vehicle)
         } label: {
             HStack(alignment:.top) {
                 VStack(alignment: .leading) {
@@ -36,5 +37,5 @@ struct VehicleListItem: View {
 }
 
 #Preview {
-    VehicleListItem(vehicle: VehicleModel(Model: "Mio", PlateNumber: "N1234G", Color: VehicleColor.silver))
+    VehicleListItem(vehicle: VehicleModel(Model: "Mio", PlateNumber: "N1234G", Color: "Black"))
 }
