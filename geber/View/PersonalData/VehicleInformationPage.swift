@@ -8,6 +8,12 @@
 import SwiftUI
 
 struct VehicleInformationPage: View {
+    @State private var showingNameSheet = false
+    @State private var showingNewVehicleSheet = false
+    @State private var showDeleteAlert = false
+    
+    @StateObject private var viewModel = VehicleInformationViewModel()
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -27,7 +33,7 @@ struct VehicleInformationPage: View {
                         
                         Section(header: Text("Personal information")) {
                             Button{
-                                
+                                showingNameSheet.toggle()
                             } label: {
                                 HStack {
                                     Text("Name")
@@ -61,10 +67,29 @@ struct VehicleInformationPage: View {
                             .foregroundStyle(.textDark)
                         }
                         Section(header: Text("VEHICLE LIST")) {
-                            VehicleListItem()
-                            VehicleListItem()
+                            ForEach(viewModel.vehicles, id:\.self) { vehicle in
+                                VehicleListItem(vehicle: vehicle)
+                                    .swipeActions(edge: .trailing) {
+                                        Button {
+                                            showDeleteAlert = true
+                                        } label: {
+                                            Image(systemName: "trash")
+                                        }
+                                        .tint(.red)
+                                    }
+                                    .alert(isPresented: $showDeleteAlert) {
+                                        Alert(
+                                            title: Text("Delete \(vehicle.Model)?"),
+                                            message: Text("Are you sure you want to delete \(vehicle.Model) \(vehicle.PlateNumber)?"),
+                                            primaryButton: .destructive(Text("Delete")) {
+                                                viewModel.deleteVehicle(vehicle)
+                                            },
+                                            secondaryButton: .cancel()
+                                        )
+                                    }
+                            }
                             Button {
-                                
+                                showingNewVehicleSheet.toggle()
                             } label: {
                                 Text("+ add vehicle")
                                     .font(.body.bold())
@@ -81,31 +106,13 @@ struct VehicleInformationPage: View {
         .frame(width: .infinity, height: .infinity)
         .navigationViewStyle(.stack)
         .toolbarBackground(.backgroundTheme)
-    }
-}
-
-struct VehicleListItem: View {
-    var body: some View {
-        Button {
-            
-        } label: {
-            HStack(alignment:.top) {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Aerox")
-                            .font(.title3.bold())
-                        Text("black")
-                            .font(.footnote)
-                            .foregroundStyle(.white)
-                            .padding(.vertical, 4)
-                            .padding(.horizontal, 8)
-                            .background(.black)
-                            .cornerRadius(10)
-                    }
-                    Text("B 2103 UB")
-                }
-                Spacer()
-            }
+        .sheet(isPresented: $showingNameSheet) {
+            NameSheetView(showingNameSheet: $showingNameSheet)
+                .presentationDetents([.medium, .large])
+        }
+        .sheet(isPresented: $showingNewVehicleSheet) {
+            NewVehicleSheetView(showingNewVehicleSheet: $showingNewVehicleSheet)
+                .presentationDetents([.medium, .large])
         }
     }
 }
