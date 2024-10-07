@@ -44,7 +44,6 @@ struct NameSheetView: View {
             Form {
                 Section(header: Text("New name")) {
                     TextField("Name", text: $username)
-                        .background(.backgroundGroup)
                 }
             }
             .scrollContentBackground(.hidden)

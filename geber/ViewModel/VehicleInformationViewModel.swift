@@ -9,23 +9,23 @@ import Combine
 
 class VehicleInformationViewModel: ObservableObject {
     @Published var username: String = "Set up"
-    @Published var vehicleActive: VehicleModel = VehicleModel(Model: "", PlateNumber: "", Color:"")
+    @Published var vehicleActive: VehicleModel = VehicleModel(model: "", plateNumber: "", color:"")
     @Published var vehicles: [VehicleModel] = []
     
     // use userdefault service
     private let userDefaultService: UserDefaultServiceProtocol
+    // use swiftdata service
+    private let dataSource = SwiftDataService.shared
+    
     // userdefault keys
     private let usernameKey = "usernameKey"
     private let vehicleModelActiveKey = "vehicleModelActive"
     private let vehiclePlateNumberActiveKey = "vehiclePlateNumberActive"
     private let vehicleColorActiveKey = "vehicleColorActive"
-    
-    let usernameDefault = "Set up"
-    let vehicleAttributeActiveDefault = ""
-    
-    // use swiftdata service
-    private let dataSource = SwiftDataService.shared
-    
+    // default value for UserDefaults
+    public let usernameDefault = "Set up"
+    public let vehicleAttributeActiveDefault = ""
+    // notificagtion subscribe
     private var cancellables = Set<AnyCancellable>()
     
     
@@ -34,9 +34,9 @@ class VehicleInformationViewModel: ObservableObject {
         // read userdefault data
         self.userDefaultService = userDefaultService
         self.username = userDefaultService.load(key: usernameKey, defaultValue: "Set up")
-        self.vehicleActive.Model = userDefaultService.load(key: vehicleModelActiveKey, defaultValue: "")
-        self.vehicleActive.PlateNumber = userDefaultService.load(key: vehiclePlateNumberActiveKey, defaultValue: "")
-        self.vehicleActive.Color = userDefaultService.load(key: vehicleColorActiveKey, defaultValue: "")
+        self.vehicleActive.model = userDefaultService.load(key: vehicleModelActiveKey, defaultValue: "")
+        self.vehicleActive.plateNumber = userDefaultService.load(key: vehiclePlateNumberActiveKey, defaultValue: "")
+        self.vehicleActive.color = userDefaultService.load(key: vehicleColorActiveKey, defaultValue: "")
         
         // observe user default
         NotificationCenter.default.publisher(for: .userDefaultsDidChange)
@@ -56,52 +56,52 @@ class VehicleInformationViewModel: ObservableObject {
         case usernameKey:
             self.username = userDefaultService.load(key: usernameKey, defaultValue: usernameDefault)
         case vehicleModelActiveKey:
-            self.vehicleActive.Model = userDefaultService.load(key: vehicleModelActiveKey, defaultValue: vehicleAttributeActiveDefault)
+            self.vehicleActive.model = userDefaultService.load(key: vehicleModelActiveKey, defaultValue: vehicleAttributeActiveDefault)
         case vehiclePlateNumberActiveKey:
-            self.vehicleActive.PlateNumber = userDefaultService.load(key: vehiclePlateNumberActiveKey, defaultValue: vehicleAttributeActiveDefault)
+            self.vehicleActive.plateNumber = userDefaultService.load(key: vehiclePlateNumberActiveKey, defaultValue: vehicleAttributeActiveDefault)
         case vehicleColorActiveKey:
-            self.vehicleActive.Color = userDefaultService.load(key: vehicleColorActiveKey, defaultValue: vehicleAttributeActiveDefault)
+            self.vehicleActive.color = userDefaultService.load(key: vehicleColorActiveKey, defaultValue: vehicleAttributeActiveDefault)
         default:
             break
         }
     }
     
-    func saveUsername(_ username: String) {
+    public func saveUsername(_ username: String) {
         userDefaultService.remove(key: usernameKey)
         userDefaultService.save(key: usernameKey, value: username)
     }
     
-    func saveVehicleActive(_ vehicle: VehicleModel) {
-        userDefaultService.remove(key: vehicleModelActiveKey)
-        userDefaultService.remove(key: vehiclePlateNumberActiveKey)
-        userDefaultService.remove(key: vehicleColorActiveKey)
-        userDefaultService.save(key: vehicleModelActiveKey, value: vehicle.Model)
-        userDefaultService.save(key: vehiclePlateNumberActiveKey, value: vehicle.PlateNumber)
-        userDefaultService.save(key: vehicleColorActiveKey, value: vehicle.Color)
-    }
-    
-    func deteleUsername() {
+    public func removeUsername() {
         userDefaultService.remove(key: usernameKey)
         username = usernameDefault
     }
     
-    func deleteVehicleActive() {
+    public func saveVehicleActive(_ vehicle: VehicleModel) {
         userDefaultService.remove(key: vehicleModelActiveKey)
         userDefaultService.remove(key: vehiclePlateNumberActiveKey)
         userDefaultService.remove(key: vehicleColorActiveKey)
-        vehicleActive = VehicleModel(Model: vehicleAttributeActiveDefault, PlateNumber: vehicleAttributeActiveDefault, Color:vehicleAttributeActiveDefault)
+        userDefaultService.save(key: vehicleModelActiveKey, value: vehicle.model)
+        userDefaultService.save(key: vehiclePlateNumberActiveKey, value: vehicle.plateNumber)
+        userDefaultService.save(key: vehicleColorActiveKey, value: vehicle.color)
     }
     
-    func loadVehicle() {
-        dataSource.fetchVehicle()
+    public func removeVehicleActive() {
+        userDefaultService.remove(key: vehicleModelActiveKey)
+        userDefaultService.remove(key: vehiclePlateNumberActiveKey)
+        userDefaultService.remove(key: vehicleColorActiveKey)
+        vehicleActive = VehicleModel(model: vehicleAttributeActiveDefault, plateNumber: vehicleAttributeActiveDefault, color:vehicleAttributeActiveDefault)
     }
     
-    func saveVehicle(_ model: String, _ plateNumber: String, _ color: String) {
-        let vehicle = VehicleModel(Model: model, PlateNumber: plateNumber, Color: color)
+//    public func loadVehicles() {
+//        dataSource.fetchVehicle()
+//    }
+    
+    public func saveVehicle(_ model: String, _ plateNumber: String, _ color: String) {
+        let vehicle = VehicleModel(model: model, plateNumber: plateNumber, color: color)
         dataSource.addVehicle(vehicle)
     }
     
-    func deleteVehicle(_ vehicle: VehicleModel) {
+    public func removeVehicle(_ vehicle: VehicleModel) {
         dataSource.removeVehicle(vehicle)
     }
 }

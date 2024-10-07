@@ -17,9 +17,9 @@ struct VehicleListItem: View {
             HStack(alignment:.top) {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text(vehicle.Model)
+                        Text(vehicle.model)
                             .font(.title3.bold())
-                        Text(vehicle.Color)
+                        Text(vehicle.color)
                             .font(.footnote)
                             .foregroundStyle(.white)
                             .padding(.vertical, 4)
@@ -27,7 +27,7 @@ struct VehicleListItem: View {
                             .background(.black)
                             .cornerRadius(10)
                     }
-                    Text(vehicle.PlateNumber)
+                    Text(vehicle.plateNumber)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
@@ -37,5 +37,5 @@ struct VehicleListItem: View {
 }
 
 #Preview {
-    VehicleListItem(vehicle: VehicleModel(Model: "Mio", PlateNumber: "N1234G", Color: "Black"))
+    VehicleListItem(vehicle: VehicleModel(model: "Mio", plateNumber: "N1234G", color: "Black"))
 }

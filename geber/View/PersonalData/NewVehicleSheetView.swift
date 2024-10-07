@@ -49,9 +49,7 @@ struct NewVehicleSheetView: View {
             Form {
                 Section(header: Text("VEHICLE INFORMATION")) {
                     TextField("Vehicle model", text: $vehicleModel)
-                        .background(.backgroundGroup)
                     TextField("Plate number", text: $vehiclePlateNumber)
-                        .background(.backgroundGroup)
                     Picker("Color", selection: $vehicleColor) {
                         Text("Select color").tag("Placeholder")
                         Text("Black").tag("Black")

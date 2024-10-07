@@ -45,16 +45,23 @@ struct VehicleInformationPage: View {
                                     Image(systemName: "chevron.right")
                                 }
                             }
+                            Button {
+                                viewModel.removeUsername()
+                            } label: {
+                                Text("Remove")
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(.red)
+                            }
                         }
                         
-                        Section(header: Text("Vehicle in user")) {
-                            if viewModel.vehicleActive.Model != viewModel.vehicleAttributeActiveDefault {
+                        Section(header: Text("Vehicle in use")) {
+                            if viewModel.vehicleActive.model != viewModel.vehicleAttributeActiveDefault {
                                 HStack(alignment:.top) {
                                     VStack(alignment: .leading) {
                                         HStack {
-                                            Text(viewModel.vehicleActive.Model)
+                                            Text(viewModel.vehicleActive.model)
                                                 .font(.title3.bold())
-                                            Text(viewModel.vehicleActive.Color)
+                                            Text(viewModel.vehicleActive.color)
                                                 .font(.footnote)
                                                 .foregroundStyle(.white)
                                                 .padding(.vertical, 4)
@@ -62,11 +69,11 @@ struct VehicleInformationPage: View {
                                                 .background(.black)
                                                 .cornerRadius(10)
                                         }
-                                        Text(viewModel.vehicleActive.PlateNumber)
+                                        Text(viewModel.vehicleActive.plateNumber)
                                     }
                                     Spacer()
                                     Button {
-                                        viewModel.deleteVehicleActive()
+                                        viewModel.removeVehicleActive()
                                     } label: {
                                         Image(systemName: "xmark")
                                     }
@@ -85,8 +92,8 @@ struct VehicleInformationPage: View {
                                 .listRowBackground(Color.backgroundTheme)
                         }
                         Section(header: Text("VEHICLE LIST")) {
-                            ForEach(viewModel.vehicles, id:\.self) { vehicle in
-                                if vehicle.PlateNumber != viewModel.vehicleActive.PlateNumber {
+                            ForEach(viewModel.vehicles, id: \.self) { vehicle in
+                                if vehicle.plateNumber != viewModel.vehicleActive.plateNumber {
                                     VehicleListItem(vehicle: vehicle)
                                         .swipeActions(edge: .trailing) {
                                             Button {
@@ -98,10 +105,10 @@ struct VehicleInformationPage: View {
                                         }
                                         .alert(isPresented: $showDeleteAlert) {
                                             Alert(
-                                                title: Text("Delete \(vehicle.Model)?"),
-                                                message: Text("Are you sure you want to delete \(vehicle.Model) \(vehicle.PlateNumber)?"),
+                                                title: Text("Delete \(vehicle.model)?"),
+                                                message: Text("Are you sure you want to delete \(vehicle.model) \(vehicle.plateNumber)?"),
                                                 primaryButton: .destructive(Text("Delete")) {
-                                                    viewModel.deleteVehicle(vehicle)
+                                                    viewModel.removeVehicle(vehicle)
                                                 },
                                                 secondaryButton: .cancel()
                                             )
@@ -109,6 +116,8 @@ struct VehicleInformationPage: View {
                                         .environmentObject(viewModel)
                                 }
                             }
+
+
                             Button {
                                 showingNewVehicleSheet.toggle()
                             } label: {
@@ -122,9 +131,7 @@ struct VehicleInformationPage: View {
                     .scrollContentBackground(.hidden)
                 }
             }
-            .frame(width: .infinity, height: .infinity)
         }
-        .frame(width: .infinity, height: .infinity)
         .navigationViewStyle(.stack)
         .toolbarBackground(.backgroundTheme)
         

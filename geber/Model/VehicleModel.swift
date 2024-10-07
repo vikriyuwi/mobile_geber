@@ -9,12 +9,12 @@ import SwiftData
 
 @Model
 class VehicleModel: Identifiable {
-    var Model: String
-    @Attribute(.unique) var PlateNumber: String
-    var Color: String
-    init(Model: String, PlateNumber: String, Color: String) {
-        self.Model = Model
-        self.PlateNumber = PlateNumber
-        self.Color = Color
+    var model: String
+    @Attribute(.unique) var plateNumber: String
+    var color: String
+    init(model: String, plateNumber: String, color: String) {
+        self.model = model
+        self.plateNumber = plateNumber
+        self.color = color
     }
 }

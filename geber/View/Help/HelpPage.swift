@@ -1,39 +1,37 @@
 import SwiftUI
 
 struct HelpPage: View {
-    @StateObject private var viewmodel = HelpViewModel()
+    @StateObject private var viewModel = HelpViewModel()
     
     var body: some View{
         NavigationStack{
             VStack{
-                NavigationLink(destination: {
-                    VehicleInformationPage()
-                }, label: {
-                    Text("Fill the data")
-                })
-                .buttonStyle(.borderedProminent)
-                if viewmodel.isSent != true {
+                if viewModel.isSent != true {
                     Spacer()
-                    LocationSection(currentNearestLocation: $viewmodel.currentNearestLocation)
+                    LocationSection(currentNearestLocation: $viewModel.currentNearestLocation)
                 }
                 Spacer()
-                ImageLocation(currentNearestLocation: $viewmodel.currentNearestLocation)
+                ImageLocation(currentNearestLocation: $viewModel.currentNearestLocation)
                 Spacer()
-                if viewmodel.currentNearestLocation != nil {
-                    if viewmodel.isSent != true {
-                        ButtonSection()
-                            .environmentObject(viewmodel)
+                if viewModel.currentNearestLocation != nil {
+                    if viewModel.isSent != true {
+                        HelpDetailView()
+                            .environmentObject(viewModel)
                     } else {
                         Text("Security is coming")
                             .font(.title.bold())
                             .multilineTextAlignment(.center)
                         Text("Don’t move into other location while security is coming to you to help")
                             .multilineTextAlignment(.center)
-                        Countdown(timeRemaining: $viewmodel.timeRemaining)
+                        Countdown()
+                            .environmentObject(viewModel)
                         Text("Wait for 1 minute before sending another request")
                             .multilineTextAlignment(.center)
                         Spacer()
                     }
+                } else {
+                    HelpDetailView()
+                        .environmentObject(viewModel)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -131,7 +129,8 @@ struct ButtonSection: View{
 }
 
 struct Countdown: View {
-    @Binding var timeRemaining:TimeInterval
+    
+    @EnvironmentObject var viewModel:HelpViewModel
     
     var body: some View {
         HStack {
@@ -149,8 +148,8 @@ struct Countdown: View {
     }
     
     private func formatedTime() -> String {
-        let minute = Int(timeRemaining)/60
-        let second = Int(timeRemaining)%60
+        let minute = Int(viewModel.timeRemaining)/60
+        let second = Int(viewModel.timeRemaining)%60
         return String(format: "%02d : %02d", minute,second)
     }
 }
