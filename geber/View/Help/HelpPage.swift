@@ -108,26 +108,6 @@ struct LocationFound: View{
     }
 }
 
-struct ButtonSection: View{
-    @EnvironmentObject var viewModel:HelpViewModel
-    
-    var body: some View{
-        HStack {
-            Button {
-                viewModel.sendHelpRequest()
-            } label: {
-                HStack {
-                    Text("Request a help")
-                        .foregroundStyle(.white)
-                }
-                .background(Color.green)
-            }
-        }
-        .padding(.vertical, 16)
-        .frame(width: .infinity)
-    }
-}
-
 struct Countdown: View {
     
     @EnvironmentObject var viewModel:HelpViewModel
