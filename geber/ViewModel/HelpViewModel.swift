@@ -20,6 +20,8 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let userDefaultService: UserDefaultServiceProtocol
     // use swiftdata service
     private let dataSource = SwiftDataService.shared
+    // firebase database
+    private let ref = Database.database().reference()
     
     @Published public var helpRequests: [HelpRequestModel] = []
     
@@ -29,8 +31,8 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     @Published public var isSent: Bool = false
     @Published public var timer: Timer?
-    @Published public var timeRemaining: TimeInterval = 180
-    private var timeRemainingDefault: TimeInterval = 180
+    @Published public var timeRemaining: TimeInterval = 60
+    private var timeRemainingDefault: TimeInterval = 60
     
     // userdefault keys
     private let usernameKey: String = "usernameKey"
@@ -40,14 +42,14 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     // default value for UserDefaults
     public let usernameDefault: String = "Set up"
     public let vehicleAttributeActiveDefault:String = ""
+    
     // location list
     private var beaconLocations: [BeaconModel] = [
-        BeaconModel(identifier: "EF63C140-2AF4-4E1E-AAB3-340055B3BB4B", major: 0, minor: 0, location: "S01", detailLocation: "A01-A05"),
-        BeaconModel(identifier: "A177D0F5-DEB1-41CB-83F4-B129C0CFC52D", major: 0, minor: 0, location: "S02", detailLocation: "A06-A07")
+        BeaconModel(identifier: "EF63C140-2AF4-4E1E-AAB3-340055B3BB4B", major: 0, minor: 0, location: "S01", detailLocation: "A01"),
+        BeaconModel(identifier: "EF63C140-2AF4-4E1E-AAB3-340055B3BB4B", major: 0, minor: 1, location: "S01", detailLocation: "A02"),
+        BeaconModel(identifier: "EF63C140-2AF4-4E1E-AAB3-340055B3BB4B", major: 1, minor: 0, location: "S02", detailLocation: "B01"),
+        BeaconModel(identifier: "EF63C140-2AF4-4E1E-AAB3-340055B3BB4B", major: 1, minor: 1, location: "S02", detailLocation: "B02")
     ]
-    
-    // firebase database
-    private let ref = Database.database().reference()
     
     // notificagtion subscribe
     private var cancellables:Set<AnyCancellable> = Set<AnyCancellable>()
@@ -246,13 +248,21 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     public func sendHelpRequest() {
         authenticateUser { isAuthenticate in
             if isAuthenticate {
-                let helpRequest = HelpRequestModel(timestamps: Date(), name: self.username, location: self.currentNearestLocation?.location ?? "unknown", detailLocation: self.currentNearestLocation?.detailLocation ?? "unknown")
-                self.saveHelpRequest(helpRequest)
-                print("\(self.helpRequests[self.helpRequests.count-1].timestamps) - \(self.helpRequests[self.helpRequests.count-1].name)")
-                self.setTimer()
+                let helpRequest = HelpRequestModel(timestamps: Date(), name: self.username, location: self.currentNearestLocation?.location ?? "unknown", detailLocation: self.currentNearestLocation?.detailLocation ?? "unknown", vehicle: self.vehicleActive)
+                self.ref.child(helpRequest.id).setValue(helpRequest.helpRequestToDictionary) { error, _ in
+                    if let error = error {
+                        print("Error writing data: \(error.localizedDescription)")
+                    } else {
+                        self.setTimer()
+                    }
+                }
+//                self.saveHelpRequest(helpRequest)
+//                print("\(self.helpRequests[self.helpRequests.count-1].timestamps) - \(self.helpRequests[self.helpRequests.count-1].name)")
             } else {
                 print("Authentication failed")
             }
         }
     }
+    
+    
 }
