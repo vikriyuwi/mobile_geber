@@ -23,18 +23,17 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     // firebase database
     private let ref = Database.database().reference()
     
-    @Published public var helpRequests: [HelpRequestModel] = []
-    
     // location manager
     @Published public var locationManager: CLLocationManager?
     @Published public var currentNearestLocation: BeaconModel? = nil
     
-    @Published public var isSent: Bool = false
+    // for request time
     @Published public var timer: Timer?
-    @Published public var timeRemaining: TimeInterval = 60
+    @Published public var timeRemaining: TimeInterval = 0
     private var timeRemainingDefault: TimeInterval = 60
     
     // userdefault keys
+    private let lastRequestTimeKey: String = "lastRequestTime"
     private let usernameKey: String = "usernameKey"
     private let vehicleModelActiveKey: String = "vehicleModelActive"
     private let vehiclePlateNumberActiveKey: String = "vehiclePlateNumberActive"
@@ -62,11 +61,13 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         super.init()
         
+        getLastRequestTime()
+        
         self.username = userDefaultService.load(key: usernameKey, defaultValue: "Set up")
         self.vehicleActive.model = userDefaultService.load(key: vehicleModelActiveKey, defaultValue: "")
         self.vehicleActive.plateNumber = userDefaultService.load(key: vehiclePlateNumberActiveKey, defaultValue: "")
         self.vehicleActive.color = userDefaultService.load(key: vehicleColorActiveKey, defaultValue: "")
-
+        
         // observe user default
         NotificationCenter.default.publisher(for: .userDefaultsDidChange)
             .sink { [weak self] notification in
@@ -79,20 +80,15 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         locationManager = CLLocationManager()
         locationManager?.delegate = self
         locationManager?.requestWhenInUseAuthorization()
-        
-        // read help request data
-        dataSource.$helpRequests
-            .assign(to: &$helpRequests)
-        
-        // check existing help request data
-        if self.helpRequests.count > 0 {
-            let timeInterval = Date().timeIntervalSince(self.helpRequests[self.helpRequests.count-1].timestamps)
-            if timeInterval > timeRemainingDefault {
-                self.removeHelpRequest()
-            } else {
-                timeRemaining = timeRemainingDefault - timeInterval
-                setTimer()
-            }
+    }
+    
+    func getLastRequestTime() {
+        let rightnow = Date()
+        if userDefaultService.load(key: lastRequestTimeKey, defaultValue: rightnow) > Date() {
+            self.timeRemaining = userDefaultService.load(key: lastRequestTimeKey, defaultValue: Date()).timeIntervalSinceNow
+            self.runTimer()
+        } else {
+            self.timeRemaining = 0
         }
     }
     
@@ -111,10 +107,9 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    private func setTimer() {
+    private func runTimer() {
         withAnimation(.spring()) {
             DispatchQueue.main.async {
-                self.isSent = true
                 self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                     if self.timeRemaining > 0 {
                         self.timeRemaining -= 1
@@ -124,28 +119,12 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }
             }
         }
-//        withAnimation(.spring().delay(0.5)) {
-//            DispatchQueue.main.async {
-//                self.isSent = true
-//                self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-//                    DispatchQueue.main.async {
-//                        if self.timeRemaining > 0 {
-//                            self.timeRemaining -= 1
-//                        } else {
-//                            self.stopTimer()
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
     
     private func stopTimer() {
-        self.removeHelpRequest()
         withAnimation(.spring()){
-            self.isSent = false
             self.timer?.invalidate()
-            self.timeRemaining = 180
+            self.timeRemaining = 0
         }
     }
     
@@ -236,33 +215,24 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             completion(false)
         }
     }
-
-    public func saveHelpRequest(_ helpRequest: HelpRequestModel) {
-        dataSource.addHelpRequest(helpRequest)
-    }
-    
-    public func removeHelpRequest() {
-        dataSource.removeAllHelpRequest()
-    }
     
     public func sendHelpRequest() {
         authenticateUser { isAuthenticate in
             if isAuthenticate {
                 let helpRequest = HelpRequestModel(timestamps: Date(), name: self.username, location: self.currentNearestLocation?.location ?? "unknown", detailLocation: self.currentNearestLocation?.detailLocation ?? "unknown", vehicle: self.vehicleActive)
-                self.ref.child(helpRequest.id).setValue(helpRequest.helpRequestToDictionary) { error, _ in
+                self.ref.child("HelpRequests").childByAutoId().setValue(helpRequest.helpRequestToDictionary) { error, _ in
                     if let error = error {
                         print("Error writing data: \(error.localizedDescription)")
                     } else {
-                        self.setTimer()
+                        
+                        self.userDefaultService.save(key: self.lastRequestTimeKey, value: Calendar.current.date(byAdding: .second, value: 60, to: Date()))
+                        self.timeRemaining = self.timeRemainingDefault
+                        self.runTimer()
                     }
                 }
-//                self.saveHelpRequest(helpRequest)
-//                print("\(self.helpRequests[self.helpRequests.count-1].timestamps) - \(self.helpRequests[self.helpRequests.count-1].name)")
             } else {
                 print("Authentication failed")
             }
         }
     }
-    
-    
 }

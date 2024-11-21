@@ -6,7 +6,7 @@ struct HelpPage: View {
     var body: some View{
         NavigationStack{
             VStack{
-                if viewModel.isSent != true {
+                if viewModel.timeRemaining == 0 {
                     Spacer()
                     LocationSection(currentNearestLocation: $viewModel.currentNearestLocation)
                 }
@@ -14,7 +14,7 @@ struct HelpPage: View {
                 ImageLocation(currentNearestLocation: $viewModel.currentNearestLocation)
                 Spacer()
                 if viewModel.currentNearestLocation != nil {
-                    if viewModel.isSent != true {
+                    if viewModel.timeRemaining == 0 {
                         HelpDetailView()
                             .environmentObject(viewModel)
                     } else {
