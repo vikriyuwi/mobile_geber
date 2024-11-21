@@ -22,10 +22,16 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let dataSource = SwiftDataService.shared
     // firebase database
     private let ref = Database.database().reference()
+    // uuid beacon
+    private let beaconUUID = "EF63C140-2AF4-4E1E-AAB3-340055B3BB4B"
     
     // location manager
     @Published public var locationManager: CLLocationManager?
     @Published public var currentNearestLocation: BeaconModel? = nil
+    @Published public var majors: [MajorModel] = []
+//    @Published public var currentLocation: String = "Unknwon"
+//    @Published public var currentDetailLocation: String = "Unknown456ghvc "
+//    @Published public var currentRssi: Int = 0
     
     // for request time
     @Published public var timer: Timer?
@@ -43,12 +49,7 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     public let vehicleAttributeActiveDefault:String = ""
     
     // location list
-    private var beaconLocations: [BeaconModel] = [
-        BeaconModel(identifier: "EF63C140-2AF4-4E1E-AAB3-340055B3BB4B", major: 0, minor: 0, location: "S01", detailLocation: "A01"),
-        BeaconModel(identifier: "EF63C140-2AF4-4E1E-AAB3-340055B3BB4B", major: 0, minor: 1, location: "S01", detailLocation: "A02"),
-        BeaconModel(identifier: "EF63C140-2AF4-4E1E-AAB3-340055B3BB4B", major: 1, minor: 0, location: "S02", detailLocation: "B01"),
-        BeaconModel(identifier: "EF63C140-2AF4-4E1E-AAB3-340055B3BB4B", major: 1, minor: 1, location: "S02", detailLocation: "B02")
-    ]
+    private var beaconLocations: [BeaconModel] = []
     
     // notificagtion subscribe
     private var cancellables:Set<AnyCancellable> = Set<AnyCancellable>()
@@ -76,10 +77,38 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             .store(in: &cancellables)
         
-        // location manager
-        locationManager = CLLocationManager()
-        locationManager?.delegate = self
-        locationManager?.requestWhenInUseAuthorization()
+        observeMajorsObject()
+    }
+    
+    func observeMajorsObject() {
+        ref.child("majors").observe(.value) { snapshot in
+            guard snapshot.exists(), let children = snapshot.children.allObjects as? [DataSnapshot] else {
+                print("No children found or snapshot does not exist.")
+                return
+            }
+            
+            self.majors = children.compactMap({ childrenSnapshot in
+                return try? childrenSnapshot.data(as: MajorModel.self)
+            })
+            
+            for major in self.majors {
+                for minor in major.minors {
+                    let beaconModel = BeaconModel(
+                        identifier: self.beaconUUID, // Example identifier
+                        major: major.id,
+                        minor: minor.id,
+                        location: major.location,
+                        detailLocation: minor.detailLocation
+                    )
+                    self.beaconLocations.append(beaconModel)
+                }
+            }
+            
+            // location manager
+            self.locationManager = CLLocationManager()
+            self.locationManager?.delegate = self
+            self.locationManager?.requestWhenInUseAuthorization()
+        }
     }
     
     func getLastRequestTime() {
@@ -142,7 +171,6 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didRange beacons: [CLBeacon], satisfying beaconConstrain: CLBeaconIdentityConstraint) {
         
         if let foundBeacon = beacons.first {
-            
             if foundBeacon.rssi < 0 {
                 if let location = beaconLocations.first(
                     where: {
@@ -175,9 +203,7 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         for beaconLocation in beaconLocations {
             if let uuid = UUID(uuidString: beaconLocation.identifier) {
                 let constraint = CLBeaconIdentityConstraint(
-                    uuid: uuid,
-                    major: CLBeaconMajorValue(beaconLocation.major),
-                    minor: CLBeaconMinorValue(beaconLocation.minor)
+                    uuid: uuid
                 )
                 
                 beaconConstraints.append(constraint)
@@ -219,8 +245,8 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     public func sendHelpRequest() {
         authenticateUser { isAuthenticate in
             if isAuthenticate {
-                let helpRequest = HelpRequestModel(timestamps: Date(), name: self.username, location: self.currentNearestLocation?.location ?? "unknown", detailLocation: self.currentNearestLocation?.detailLocation ?? "unknown", vehicle: self.vehicleActive)
-                self.ref.child("HelpRequests").childByAutoId().setValue(helpRequest.helpRequestToDictionary) { error, _ in
+                let helpRequest = HelpRequestModel(timestamps: Date(), name: self.username, location: self.currentNearestLocation?.location ?? "Unknown", detailLocation: self.currentNearestLocation?.detailLocation ?? "Unknown", vehicle: self.vehicleActive)
+                self.ref.child("helpRequests").childByAutoId().setValue(helpRequest.helpRequestToDictionary) { error, _ in
                     if let error = error {
                         print("Error writing data: \(error.localizedDescription)")
                     } else {

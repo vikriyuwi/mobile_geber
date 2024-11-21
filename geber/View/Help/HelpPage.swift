@@ -101,9 +101,9 @@ struct LocationFound: View{
         Text("Your position right now")
             .font(.title2)
             .multilineTextAlignment(.center)
-        Text(currentNearestLocation?.location ?? "Unknown")
-            .font(.system(size: 98, weight: .bold))
         Text(currentNearestLocation?.detailLocation ?? "Unknown")
+            .font(.system(size: 98, weight: .bold))
+        Text(currentNearestLocation?.location ?? "Unknown")
             .multilineTextAlignment(.center)
     }
 }
