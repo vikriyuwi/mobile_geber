@@ -87,9 +87,16 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                 return
             }
             
-            self.majors = children.compactMap({ childrenSnapshot in
-                return try? childrenSnapshot.data(as: MajorModel.self)
-            })
+            self.majors = children.compactMap { childSnapshot in
+                guard let dictionary = childSnapshot.value as? [String: Any] else { return nil }
+                do {
+                    let data = try JSONSerialization.data(withJSONObject: dictionary, options: [])
+                    return try JSONDecoder().decode(MajorModel.self, from: data)
+                } catch {
+//                    print("Error decoding MajorModel: \(error)")
+                    return nil
+                }
+            }
             
             for major in self.majors {
                 for minor in major.minors {

@@ -10,7 +10,6 @@ import SwiftData
 class MajorModel: Identifiable, Codable {
     var id: Int
     var location: String
-    @Relationship(deleteRule: .cascade)
     var minors: [MinorModel]
     
     init (id: Int, location: String, minor: [MinorModel]) {
@@ -23,7 +22,16 @@ class MajorModel: Identifiable, Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         location = try container.decode(String.self, forKey: .location)
-        minors = try container.decode([MinorModel].self, forKey: .minors)
+
+        // Try decoding minors as an array first, then fallback to a dictionary
+        if let minorsArray = try? container.decode([MinorModel?].self, forKey: .minors) {
+            // Filter out `nil` values from the array
+            minors = minorsArray.compactMap { $0 }
+        } else if let minorsDict = try? container.decode([String: MinorModel].self, forKey: .minors) {
+            minors = minorsDict.map { $0.value }
+        } else {
+            minors = []
+        }
     }
     
     func encode(to encoder: any Encoder) throws {
