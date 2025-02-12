@@ -13,8 +13,19 @@
 		B247F0BA2CBFF86400CC2088 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = B247F0B92CBFF86400CC2088 /* FirebaseDatabase */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		B2DBE4E22D2A5F6A00D3C4BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B29F7C3A2C9DBA3A00C95628 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B29F7C412C9DBA3A00C95628;
+			remoteInfo = geber;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		B29F7C422C9DBA3A00C95628 /* geber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = geber.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B2DBE4DE2D2A5F6A00D3C4BC /* HelpViewModelTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HelpViewModelTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -36,6 +47,11 @@
 			path = geber;
 			sourceTree = "<group>";
 		};
+		B2DBE4DF2D2A5F6A00D3C4BC /* GeberTest */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = GeberTest;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +66,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B2DBE4DB2D2A5F6A00D3C4BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -57,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				B29F7C442C9DBA3A00C95628 /* geber */,
+				B2DBE4DF2D2A5F6A00D3C4BC /* GeberTest */,
 				B29F7C432C9DBA3A00C95628 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				B29F7C422C9DBA3A00C95628 /* geber.app */,
+				B2DBE4DE2D2A5F6A00D3C4BC /* HelpViewModelTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -98,6 +123,29 @@
 			productReference = B29F7C422C9DBA3A00C95628 /* geber.app */;
 			productType = "com.apple.product-type.application";
 		};
+		B2DBE4DD2D2A5F6A00D3C4BC /* HelpViewModelTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B2DBE4E62D2A5F6A00D3C4BC /* Build configuration list for PBXNativeTarget "HelpViewModelTest" */;
+			buildPhases = (
+				B2DBE4DA2D2A5F6A00D3C4BC /* Sources */,
+				B2DBE4DB2D2A5F6A00D3C4BC /* Frameworks */,
+				B2DBE4DC2D2A5F6A00D3C4BC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B2DBE4E32D2A5F6A00D3C4BC /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				B2DBE4DF2D2A5F6A00D3C4BC /* GeberTest */,
+			);
+			name = HelpViewModelTest;
+			packageProductDependencies = (
+			);
+			productName = HelpViewModelTest;
+			productReference = B2DBE4DE2D2A5F6A00D3C4BC /* HelpViewModelTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -105,11 +153,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					B29F7C412C9DBA3A00C95628 = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					B2DBE4DD2D2A5F6A00D3C4BC = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = B29F7C412C9DBA3A00C95628;
 					};
 				};
 			};
@@ -131,12 +183,20 @@
 			projectRoot = "";
 			targets = (
 				B29F7C412C9DBA3A00C95628 /* geber */,
+				B2DBE4DD2D2A5F6A00D3C4BC /* HelpViewModelTest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		B29F7C402C9DBA3A00C95628 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B2DBE4DC2D2A5F6A00D3C4BC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -153,7 +213,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B2DBE4DA2D2A5F6A00D3C4BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B2DBE4E32D2A5F6A00D3C4BC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B29F7C412C9DBA3A00C95628 /* geber */;
+			targetProxy = B2DBE4E22D2A5F6A00D3C4BC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B29F7C4E2C9DBA3B00C95628 /* Debug */ = {
@@ -293,8 +368,9 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -328,8 +404,9 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -342,6 +419,44 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		B2DBE4E42D2A5F6A00D3C4BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CK8M57PVR8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vikriyuwi.HelpViewModelTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/geber.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/geber";
+			};
+			name = Debug;
+		};
+		B2DBE4E52D2A5F6A00D3C4BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CK8M57PVR8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vikriyuwi.HelpViewModelTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/geber.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/geber";
 			};
 			name = Release;
 		};
@@ -362,6 +477,15 @@
 			buildConfigurations = (
 				B29F7C512C9DBA3B00C95628 /* Debug */,
 				B29F7C522C9DBA3B00C95628 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B2DBE4E62D2A5F6A00D3C4BC /* Build configuration list for PBXNativeTarget "HelpViewModelTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B2DBE4E42D2A5F6A00D3C4BC /* Debug */,
+				B2DBE4E52D2A5F6A00D3C4BC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -22,9 +22,11 @@ struct geberApp: App {
     // register app delegate for Firebase setup
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
+    @StateObject var networkMonitor = NetworkMonitor()
     var body: some Scene {
         WindowGroup {
             HelpPage()
+                .environmentObject(networkMonitor)
         }
     }
 }

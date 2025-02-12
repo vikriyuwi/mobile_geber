@@ -17,13 +17,13 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published public var vehicleActive: VehicleModel = VehicleModel(model: "", plateNumber: "", color:"")
     
     // use userdefault service
-    private let userDefaultService: UserDefaultServiceProtocol
+    public let userDefaultService: UserDefaultServiceProtocol
     // use swiftdata service
-    private let dataSource = SwiftDataService.shared
+    public let dataSource = SwiftDataService.shared
     // firebase database
-    private let ref = Database.database().reference()
+    public let ref = Database.database().reference()
     // uuid beacon
-    private let beaconUUID = "EF63C140-2AF4-4E1E-AAB3-340055B3BB4B"
+    public let beaconUUID = "EF63C140-2AF4-4E1E-AAB3-340055B3BB4B"
     
     // location manager
     @Published public var locationManager: CLLocationManager?
@@ -36,23 +36,23 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     // for request time
     @Published public var timer: Timer?
     @Published public var timeRemaining: TimeInterval = 0
-    private var timeRemainingDefault: TimeInterval = 60
+    public var timeRemainingDefault: TimeInterval = 60
     
     // userdefault keys
-    private let lastRequestTimeKey: String = "lastRequestTime"
-    private let usernameKey: String = "usernameKey"
-    private let vehicleModelActiveKey: String = "vehicleModelActive"
-    private let vehiclePlateNumberActiveKey: String = "vehiclePlateNumberActive"
-    private let vehicleColorActiveKey: String = "vehicleColorActive"
+    public let lastRequestTimeKey: String = "lastRequestTime"
+    public let usernameKey: String = "usernameKey"
+    public let vehicleModelActiveKey: String = "vehicleModelActive"
+    public let vehiclePlateNumberActiveKey: String = "vehiclePlateNumberActive"
+    public let vehicleColorActiveKey: String = "vehicleColorActive"
     // default value for UserDefaults
     public let usernameDefault: String = "Set up"
     public let vehicleAttributeActiveDefault:String = ""
     
     // location list
-    private var beaconLocations: [BeaconModel] = []
+    public var beaconLocations: [BeaconModel] = []
     
     // notificagtion subscribe
-    private var cancellables:Set<AnyCancellable> = Set<AnyCancellable>()
+    public var cancellables:Set<AnyCancellable> = Set<AnyCancellable>()
     
     init(userDefaultService: UserDefaultServiceProtocol = UserDefaultService()) {
         
@@ -128,7 +128,7 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    private func handleUserDefaultsChange(for key: String) {
+    public func handleUserDefaultsChange(for key: String) {
         switch key {
         case usernameKey:
             self.username = userDefaultService.load(key: usernameKey, defaultValue: usernameDefault)
@@ -143,7 +143,7 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    private func runTimer() {
+    public func runTimer() {
         withAnimation(.spring()) {
             DispatchQueue.main.async {
                 self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
@@ -157,7 +157,7 @@ class HelpViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    private func stopTimer() {
+    public func stopTimer() {
         withAnimation(.spring()){
             self.timer?.invalidate()
             self.timeRemaining = 0

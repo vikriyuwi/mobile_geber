@@ -45,13 +45,13 @@ struct VehicleInformationPage: View {
                                     Image(systemName: "chevron.right")
                                 }
                             }
-                            Button {
-                                viewModel.removeUsername()
-                            } label: {
-                                Text("Remove")
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(.red)
-                            }
+//                            Button {
+//                                viewModel.removeUsername()
+//                            } label: {
+//                                Text("Remove")
+//                                    .fontWeight(.bold)
+//                                    .foregroundStyle(.red)
+//                            }
                         }
                         
                         Section(header: Text("Vehicle in use")) {

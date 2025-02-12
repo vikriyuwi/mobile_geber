@@ -19,7 +19,7 @@ class SwiftDataService {
     static let shared = SwiftDataService()
     
     @MainActor
-    private init() {
+    public init() {
         // Change isStoredInMemoryOnly to false if you would like to see the data persistance after kill/exit the app
         
         let schema = Schema([

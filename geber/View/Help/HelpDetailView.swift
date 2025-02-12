@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HelpDetailView: View {
     @EnvironmentObject var viewModel: HelpViewModel
+    @EnvironmentObject var networkMonitor: NetworkMonitor
     
     var body: some View {
         HStack(alignment:.top) {
@@ -78,21 +79,39 @@ struct HelpDetailView: View {
                         .cornerRadius(20)
                     })
                     
-                    Button {
-                        viewModel.sendHelpRequest()
-                    } label: {
-                        HStack {
-                            Spacer()
-                            Text("SEND HELP")
-                                .padding(20)
-                                .foregroundStyle(viewModel.currentNearestLocation != nil ? .textDark : .secondary)
-                            Spacer()
+                    if networkMonitor.hasNetworkConnection {
+                        Button {
+                            viewModel.sendHelpRequest()
+                        } label: {
+                            HStack {
+                                Spacer()
+                                Text("REQUEST HELP")
+                                    .padding(20)
+                                    .foregroundStyle(viewModel.currentNearestLocation != nil ? .textDark : .secondary)
+                                Spacer()
+                            }
                         }
+                        .buttonStyle(.borderedProminent)
+                        .cornerRadius(20)
+                        .padding(.top,4)
+                        .disabled(viewModel.currentNearestLocation != nil ? false : true)
+                    } else {
+                        Button {
+                            
+                        } label: {
+                            HStack {
+                                Spacer()
+                                Text("NO INTERNET")
+                                    .padding(20)
+                                    .foregroundStyle(viewModel.currentNearestLocation != nil ? .textDark : .secondary)
+                                Spacer()
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .cornerRadius(20)
+                        .padding(.top,4)
+                        .disabled(true)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .cornerRadius(20)
-                    .padding(.top,4)
-                    .disabled(viewModel.currentNearestLocation != nil ? false : true)
                 }
             }
         }
