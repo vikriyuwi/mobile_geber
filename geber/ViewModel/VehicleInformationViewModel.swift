@@ -7,10 +7,12 @@
 import SwiftUI
 import Combine
 
+@MainActor
 class VehicleInformationViewModel: ObservableObject {
     @Published var username: String = "Set up"
     @Published var vehicleActive: VehicleModel = VehicleModel(model: "", plateNumber: "", color:"")
     @Published var vehicles: [VehicleModel] = []
+    @Published var helpRequests: [HelpRequestModel] = []
     
     // use userdefault service
     private let userDefaultService: UserDefaultServiceProtocol
@@ -47,8 +49,9 @@ class VehicleInformationViewModel: ObservableObject {
             .store(in: &cancellables)
         
         // read vehicles data
-        dataSource.$vehicles
-            .assign(to: &$vehicles)
+//        dataSource.$vehicles
+//            .assign(to: &$vehicles)
+        loadVehicles()
     }
     
     private func handleUserDefaultsChange(for key: String) {
@@ -92,16 +95,18 @@ class VehicleInformationViewModel: ObservableObject {
         vehicleActive = VehicleModel(model: vehicleAttributeActiveDefault, plateNumber: vehicleAttributeActiveDefault, color:vehicleAttributeActiveDefault)
     }
     
-//    public func loadVehicles() {
-//        dataSource.fetchVehicle()
-//    }
+    public func loadVehicles() {
+        vehicles = dataSource.fetchVehicle()
+    }
     
     public func saveVehicle(_ model: String, _ plateNumber: String, _ color: String) {
         let vehicle = VehicleModel(model: model, plateNumber: plateNumber, color: color)
         dataSource.addVehicle(vehicle)
+        loadVehicles()
     }
     
     public func removeVehicle(_ vehicle: VehicleModel) {
         dataSource.removeVehicle(vehicle)
+        loadVehicles()
     }
 }

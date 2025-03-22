@@ -39,6 +39,9 @@ struct HelpPage: View {
             .background(.backgroundTheme)
         }
         .navigationViewStyle(.stack)
+        .onDisappear {
+            viewModel.stopScanning()
+        }
     }
 }
 

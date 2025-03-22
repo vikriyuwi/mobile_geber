@@ -2,7 +2,7 @@ import XCTest
 import CoreLocation
 @testable import geber
 
-class LocationManagerTests: XCTestCase {
+class LocationManagerTest: XCTestCase {
     var locationManager: LocationManager!
     
     override func setUpWithError() throws {

@@ -6,7 +6,6 @@
 //
 import SwiftData
 
-@Model
 class MinorModel: Identifiable, Codable {
     var id: Int
     var detailLocation: String

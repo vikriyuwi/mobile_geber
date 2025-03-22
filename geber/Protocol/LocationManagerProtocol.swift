@@ -10,8 +10,8 @@ import CoreLocation
 protocol LocationManagerProtocol {
     var beaconLocations: [BeaconModel] { get set }
     var currentNearestLocation: BeaconModel? { get set }
-    var detectedBeacons: [BeaconModel] { get set }
     
-    func startScanning(uuid: String)
+    func startScanning()
     func stopScanning()
+    func locationManager(_ manager: CLLocationManager, didRange beacons: [CLBeacon], satisfying constraint: CLBeaconIdentityConstraint)
 }

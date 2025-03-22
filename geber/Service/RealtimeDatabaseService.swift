@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseDatabase
 
-class RealtimeDatabaseService {
+class RealtimeDatabaseService: RealtimeDatabaseServiceProtocol {
     static let shared = RealtimeDatabaseService()
     private let database = Database.database().reference()
     

@@ -1,35 +1,72 @@
-//
-//  BiometricAuthServiceTest.swift
-//  HelpViewModelTest
-//
-//  Created by Vikri Yuwi on 22/03/25.
-//
-
 import XCTest
+import LocalAuthentication
+@testable import geber
 
-final class BiometricAuthServiceTest: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+class MockLAContext: LAContext {
+    var canEvaluatePolicyResult = true
+    var evaluatePolicySuccess = true
+    
+    override func canEvaluatePolicy(_ policy: LAPolicy, error: NSErrorPointer) -> Bool {
+        return canEvaluatePolicyResult
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    override func evaluatePolicy(_ policy: LAPolicy, localizedReason: String, reply: @escaping (Bool, Error?) -> Void) {
+        reply(evaluatePolicySuccess, nil)
     }
+}
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+class BiometricAuthServiceTest: XCTestCase {
+    var biometricAuthService: BiometricAuthService!
+    var mockContext: MockLAContext!
+    
+    override func setUp() {
+        super.setUp()
+        biometricAuthService = BiometricAuthService.shared
+        mockContext = MockLAContext()
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    
+    override func tearDown() {
+        biometricAuthService = nil
+        mockContext = nil
+        super.tearDown()
+    }
+    
+    func testAuthenticationSuccess() {
+        mockContext.evaluatePolicySuccess = true
+        
+        let expectation = self.expectation(description: "Authentication should succeed")
+        
+        biometricAuthService.authenticateUser { success in
+            XCTAssertTrue(success, "Expected authentication to succeed")
+            expectation.fulfill()
         }
+        
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
-
+    
+    func testAuthenticationFailure() {
+        mockContext.evaluatePolicySuccess = false
+        
+        let expectation = self.expectation(description: "Authentication should fail")
+        
+        biometricAuthService.authenticateUser { success in
+            XCTAssertFalse(success, "Expected authentication to fail")
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
+    func testBiometricUnavailable() {
+        mockContext.canEvaluatePolicyResult = false
+        
+        let expectation = self.expectation(description: "Biometric authentication should be unavailable")
+        
+        biometricAuthService.authenticateUser { success in
+            XCTAssertFalse(success, "Expected biometric authentication to be unavailable")
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
 }

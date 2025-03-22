@@ -161,6 +161,7 @@
 					};
 					B2DBE4DD2D2A5F6A00D3C4BC = {
 						CreatedOnToolsVersion = 16.2;
+						LastSwiftMigration = 1620;
 						TestTargetID = B29F7C412C9DBA3A00C95628;
 					};
 				};
@@ -356,14 +357,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"geber/Preview Content\"";
 				DEVELOPMENT_TEAM = CK8M57PVR8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = geber/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Geber;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "We need to see your location to let the staff know about your help request";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Face ID is required for authentication";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need to see your location to let the staff know about your help request";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need to see your location to let the staff know about your help request";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -375,7 +378,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vikriyuwi.geber;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -392,14 +395,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"geber/Preview Content\"";
 				DEVELOPMENT_TEAM = CK8M57PVR8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = geber/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Geber;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "We need to see your location to let the staff know about your help request";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Face ID is required for authentication";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need to see your location to let the staff know about your help request";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need to see your location to let the staff know about your help request";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -411,7 +416,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vikriyuwi.geber;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -426,6 +431,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CK8M57PVR8;
@@ -435,6 +441,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.vikriyuwi.HelpViewModelTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/geber.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/geber";
@@ -445,6 +452,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CK8M57PVR8;

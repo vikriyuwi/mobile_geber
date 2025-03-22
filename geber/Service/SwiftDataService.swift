@@ -1,108 +1,65 @@
-//
-//  VehicleSwiftDataService.swift
-//  geber
-//
-//  Created by Vikri Yuwi on 2/10/24.
-//
-
 import SwiftData
 import Foundation
 
+@MainActor
 class SwiftDataService {
-    @Published var vehicles: [VehicleModel] = []
-    @Published var helpRequests: [HelpRequestModel] = []
-    
-    private let modelContainer: ModelContainer
-    private let modelContext: ModelContext
-    
-    @MainActor
     static let shared = SwiftDataService()
     
-    @MainActor
-    public init() {
-        // Change isStoredInMemoryOnly to false if you would like to see the data persistance after kill/exit the app
-        
-        let schema = Schema([
-            VehicleModel.self,
-            HelpRequestModel.self
-        ])
-        
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-        
-        self.modelContainer = try! ModelContainer(for: schema, configurations: modelConfiguration)
-        self.modelContext = modelContainer.mainContext
-        
-        self.fetchVehicle()
-        self.fetchHelpRequests()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(contextObjectDidChange), name: .NSManagedObjectContextObjectsDidChange, object: modelContext)
-    }
+    private let container: ModelContainer
+    private let context: ModelContext
     
-    @objc private func contextObjectDidChange(notification: Notification) {
-        self.fetchVehicle()
-        self.fetchHelpRequests()
-    }
-    
-    func fetchVehicle() {
+    private init() {
         do {
-            self.vehicles = try modelContext.fetch(FetchDescriptor<VehicleModel>())
+            container = try ModelContainer(for: VehicleModel.self, HelpRequestModel.self)
+            context = container.mainContext
         } catch {
-            fatalError(error.localizedDescription)
+            fatalError("Failed to initialize SwiftData container: \(error)")
         }
     }
     
-    func fetchHelpRequests() {
-        do {
-            self.helpRequests = try modelContext.fetch(FetchDescriptor<HelpRequestModel>())
-        } catch {
-            fatalError(error.localizedDescription)
-        }
+    // Fetch Vehicles
+    func fetchVehicle() -> [VehicleModel] {
+        let fetchDescriptor = FetchDescriptor<VehicleModel>()
+        return (try? context.fetch(fetchDescriptor)) ?? []
     }
     
-    func addVehicle(_ vehicle: VehicleModel) {
-        modelContext.insert(vehicle)
-        do {
-            try modelContext.save()
-            self.fetchVehicle()
-        } catch {
-            fatalError(error.localizedDescription)
-        }
-    }
-    
-    func addHelpRequest(_ helpRequest: HelpRequestModel) {
-        modelContext.insert(helpRequest)
-        do {
-            try modelContext.save()
-            self.fetchHelpRequests()
-        } catch {
-            fatalError(error.localizedDescription)
-        }
-    }
-    
-    func removeVehicle(_ vehicle: VehicleModel) {
-        modelContext.delete(vehicle)
-        do {
-            try modelContext.save()
-            self.fetchVehicle()
-        } catch {
-            fatalError(error.localizedDescription)
-        }
-    }
-    
-    func removeAllHelpRequest() {
+    // Fetch Help Requests
+    func fetchHelpRequests() -> [HelpRequestModel] {
         let fetchDescriptor = FetchDescriptor<HelpRequestModel>()
-        
+        return (try? context.fetch(fetchDescriptor)) ?? []
+    }
+    
+    // Add Vehicle
+    func addVehicle(_ vehicle: VehicleModel) {
+        context.insert(vehicle)
+        saveContext()
+    }
+    
+    // Add Help Request
+    func addHelpRequest(_ helpRequest: HelpRequestModel) {
+        context.insert(helpRequest)
+        saveContext()
+    }
+    
+    // Remove Vehicle
+    func removeVehicle(_ vehicle: VehicleModel) {
+        context.delete(vehicle)
+        saveContext()
+    }
+    
+    // Remove All Help Requests
+    func removeAllHelpRequest() {
+        let requests = fetchHelpRequests()
+        requests.forEach { context.delete($0) }
+        saveContext()
+    }
+    
+    // Save Context
+    private func saveContext() {
         do {
-            let helpRequests = try modelContext.fetch(fetchDescriptor)
-            
-            for helpRequest in helpRequests {
-                modelContext.delete(helpRequest)
-            }
-            
-            try modelContext.save()  // Save changes to the context
-            self.fetchHelpRequests() // Re-fetch remaining vehicles (none if all are deleted)
+            try context.save()
         } catch {
-            fatalError(error.localizedDescription)
+            print("Failed to save context: \(error)")
         }
     }
 }

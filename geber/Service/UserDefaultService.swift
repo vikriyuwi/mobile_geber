@@ -11,6 +11,8 @@ extension Notification.Name {
 }
 
 class UserDefaultService: UserDefaultServiceProtocol {
+    static let shared = UserDefaultService()
+    
     private let userDefaults = UserDefaults.standard
     
     func save<T: Codable>(key: String, value: T) {

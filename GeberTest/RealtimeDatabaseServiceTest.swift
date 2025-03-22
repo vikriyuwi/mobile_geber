@@ -1,35 +1,55 @@
-//
-//  RealtimeDatabaseServiceTest.swift
-//  HelpViewModelTest
-//
-//  Created by Vikri Yuwi on 22/03/25.
-//
-
 import XCTest
+@testable import geber
 
-final class RealtimeDatabaseServiceTest: XCTestCase {
-
+class RealtimeDatabaseServiceTests: XCTestCase {
+    var realtimeDatabaseService: RealtimeDatabaseService!
+    
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        realtimeDatabaseService = RealtimeDatabaseService.shared
     }
-
+    
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        realtimeDatabaseService = nil
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    
+    func testWriteDataAutoId() {
+        let expectation = self.expectation(description: "Write data successfully")
+        let minor = MinorModel(id: 1, detailLocation: "Room A")
+        let major = MajorModel(id: 101, location: "Building 1", minor: [minor])
+        
+        realtimeDatabaseService.writeDataAutoId(path: "majors", data: major) { error in
+            XCTAssertNil(error, "Failed to write data: \(String(describing: error))")
+            
+            // Verify that data was actually written
+            self.realtimeDatabaseService.observeData(path: "majors") { (result: Result<[MajorModel], Error>) in
+                switch result {
+                case .success(let majors):
+                    XCTAssertFalse(majors.isEmpty, "Data was not written to Firebase")
+                    XCTAssertTrue(majors.contains { $0.id == 101 }, "Expected major ID not found in database")
+                case .failure(let error):
+                    XCTFail("Error fetching data after writing: \(error.localizedDescription)")
+                }
+                expectation.fulfill()
+            }
         }
+        
+        waitForExpectations(timeout: 5, handler: nil)
     }
-
+    
+    func testObserveData() {
+        let expectation = self.expectation(description: "Observe data successfully")
+        
+        realtimeDatabaseService.observeData(path: "majors") { (result: Result<[MajorModel], Error>) in
+            switch result {
+            case .success(let majors):
+                XCTAssertNotNil(majors, "Fetched data is nil")
+                XCTAssertGreaterThan(majors.count, 0, "Fetched majors should not be empty")
+            case .failure(let error):
+                XCTFail("Error observing data: \(error.localizedDescription)")
+            }
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 5, handler: nil)
+    }
 }

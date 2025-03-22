@@ -15,6 +15,7 @@ struct VehicleInformationPage: View {
     @State var showEmptyAlert = false
     
     @StateObject private var viewModel = VehicleInformationViewModel()
+    @State var vehicleToDelete: VehicleModel?
     
     var body: some View {
         NavigationStack {
@@ -97,27 +98,15 @@ struct VehicleInformationPage: View {
                                     VehicleListItem(vehicle: vehicle)
                                         .swipeActions(edge: .trailing) {
                                             Button {
+                                                vehicleToDelete = vehicle
                                                 showDeleteAlert = true
                                             } label: {
                                                 Image(systemName: "trash")
                                             }
                                             .tint(.red)
                                         }
-                                        .alert(isPresented: $showDeleteAlert) {
-                                            Alert(
-                                                title: Text("Delete \(vehicle.model)?"),
-                                                message: Text("Are you sure you want to delete \(vehicle.model) \(vehicle.plateNumber)?"),
-                                                primaryButton: .destructive(Text("Delete")) {
-                                                    viewModel.removeVehicle(vehicle)
-                                                },
-                                                secondaryButton: .cancel()
-                                            )
-                                        }
-                                        .environmentObject(viewModel)
                                 }
                             }
-
-
                             Button {
                                 showingNewVehicleSheet.toggle()
                             } label: {
@@ -144,6 +133,16 @@ struct VehicleInformationPage: View {
             NewVehicleSheetView(showingNewVehicleSheet: $showingNewVehicleSheet)
                 .presentationDetents([.medium,.large])
                 .environmentObject(viewModel)
+        }
+        .alert(isPresented: $showDeleteAlert) {
+            Alert(
+                title: Text("Delete \(vehicleToDelete!.model)?"),
+                message: Text("Are you sure you want to delete \(vehicleToDelete!.model) \(vehicleToDelete!.plateNumber)?"),
+                primaryButton: .destructive(Text("Delete")) {
+                    viewModel.removeVehicle(vehicleToDelete!)
+                },
+                secondaryButton: .cancel()
+            )
         }
     }
 }
