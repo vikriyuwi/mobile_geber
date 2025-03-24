@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HelpDetailView: View {
     @EnvironmentObject var viewModel: HelpViewModel
-    @EnvironmentObject var networkMonitor: NetworkMonitor
+    @EnvironmentObject var networkMonitor: NetworkManager
     
     var body: some View {
         HStack(alignment:.top) {

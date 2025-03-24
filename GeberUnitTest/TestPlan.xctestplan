@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "65BC7FFB-AADE-4C1F-B5DB-AB66EC273F8F",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:geber.xcodeproj",
+        "identifier" : "B2BF0FAC2D90F2A80092D238",
+        "name" : "GeberUnitTest"
+      }
+    }
+  ],
+  "version" : 1
+}

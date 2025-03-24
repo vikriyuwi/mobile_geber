@@ -105,6 +105,7 @@ struct VehicleInformationPage: View {
                                             }
                                             .tint(.red)
                                         }
+                                        .environmentObject(viewModel)
                                 }
                             }
                             Button {

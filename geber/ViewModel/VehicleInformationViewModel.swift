@@ -80,9 +80,6 @@ class VehicleInformationViewModel: ObservableObject {
     }
     
     public func saveVehicleActive(_ vehicle: VehicleModel) {
-        userDefaultService.remove(key: vehicleModelActiveKey)
-        userDefaultService.remove(key: vehiclePlateNumberActiveKey)
-        userDefaultService.remove(key: vehicleColorActiveKey)
         userDefaultService.save(key: vehicleModelActiveKey, value: vehicle.model)
         userDefaultService.save(key: vehiclePlateNumberActiveKey, value: vehicle.plateNumber)
         userDefaultService.save(key: vehicleColorActiveKey, value: vehicle.color)
@@ -92,7 +89,6 @@ class VehicleInformationViewModel: ObservableObject {
         userDefaultService.remove(key: vehicleModelActiveKey)
         userDefaultService.remove(key: vehiclePlateNumberActiveKey)
         userDefaultService.remove(key: vehicleColorActiveKey)
-        vehicleActive = VehicleModel(model: vehicleAttributeActiveDefault, plateNumber: vehicleAttributeActiveDefault, color:vehicleAttributeActiveDefault)
     }
     
     public func loadVehicles() {
