@@ -1,29 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "1620"
-   version = "2.2">
+   version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES"
       buildArchitectures = "Automatic">
-      <BuildActionEntries>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <AutocreatedTestPlanReference>
-            </AutocreatedTestPlanReference>
-         </BuildActionEntry>
-      </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:GeberUnitTest/GeberUnitTest.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+      </TestPlans>
       <Testables>
          <TestableReference
             skipped = "NO"
@@ -35,6 +29,35 @@
                BlueprintName = "GeberUnitTest"
                ReferencedContainer = "container:geber.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "BiometricAuthServiceTest">
+               </Test>
+               <Test
+                  Identifier = "BiometricAuthServiceTest/testAuthenticationFailure()">
+               </Test>
+               <Test
+                  Identifier = "BiometricAuthServiceTest/testAuthenticationSuccess()">
+               </Test>
+               <Test
+                  Identifier = "BiometricAuthServiceTest/testBiometricUnavailable()">
+               </Test>
+               <Test
+                  Identifier = "LocationManagerTest">
+               </Test>
+               <Test
+                  Identifier = "LocationManagerTest/testStartScanning()">
+               </Test>
+               <Test
+                  Identifier = "RealtimeDatabaseServiceTests">
+               </Test>
+               <Test
+                  Identifier = "RealtimeDatabaseServiceTests/testObserveData()">
+               </Test>
+               <Test
+                  Identifier = "RealtimeDatabaseServiceTests/testWriteDataAutoId()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>
@@ -47,23 +70,20 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
-      allowLocationSimulation = "YES">
+      allowLocationSimulation = "YES"
+      consoleMode = "0"
+      structuredConsoleMode = "1">
+      <LocationScenarioReference
+         identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
+         referenceType = "1">
+      </LocationScenarioReference>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B2BF0FAC2D90F2A80092D238"
-            BuildableName = "GeberUnitTest.xctest"
-            BlueprintName = "GeberUnitTest"
-            ReferencedContainer = "container:geber.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

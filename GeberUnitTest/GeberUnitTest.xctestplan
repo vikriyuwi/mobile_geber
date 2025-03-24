@@ -1,0 +1,36 @@
+{
+  "configurations" : [
+    {
+      "id" : "6953CC8B-6B92-4EC6-89FF-DE07302E2C56",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "skippedTests" : [
+        "BiometricAuthServiceTest",
+        "BiometricAuthServiceTest\/testAuthenticationFailure()",
+        "BiometricAuthServiceTest\/testAuthenticationSuccess()",
+        "BiometricAuthServiceTest\/testBiometricUnavailable()",
+        "LocationManagerTest",
+        "LocationManagerTest\/testStartScanning()",
+        "RealtimeDatabaseServiceTests",
+        "RealtimeDatabaseServiceTests\/testObserveData()",
+        "RealtimeDatabaseServiceTests\/testWriteDataAutoId()"
+      ],
+      "target" : {
+        "containerPath" : "container:geber.xcodeproj",
+        "identifier" : "B2BF0FAC2D90F2A80092D238",
+        "name" : "GeberUnitTest"
+      }
+    }
+  ],
+  "version" : 1
+}

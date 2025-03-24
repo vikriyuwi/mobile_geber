@@ -1,0 +1,27 @@
+
+[
+  {
+    "id": "A1B2C3D4-E5F6-7890-1234-56789ABCDEF0",
+    "timestamps": "2025-03-24T12:00:00Z",
+    "name": "User1",
+    "location": "East Area",
+    "detailLocation": "A01",
+    "vehicle": {
+      "model": "Mio",
+      "plateNumber": "A 1111 BC",
+      "color": "White"
+    }
+  },
+  {
+    "id": "B1C2D3E4-F5G6-7890-5678-12345ABCDEF0",
+    "timestamps": "2025-03-24T12:00:00Z",
+    "name": "User2",
+    "location": "West Area",
+    "detailLocation": "B05",
+    "vehicle": {
+      "model": "Vario 125",
+      "plateNumber": "B 1945 IND",
+      "color": "Black"
+    }
+  }
+]

@@ -25,6 +25,16 @@ class VehicleModel: Identifiable, Encodable, Decodable {
         color = try container.decode(String.self, forKey: .color)
     }
     
+    convenience init?(from dictionary: [String: Any]) {
+        guard let model = dictionary["model"] as? String,
+            let plateNumber = dictionary["plateNumber"] as? String,
+            let color = dictionary["color"] as? String else {
+            return nil
+        }
+            
+        self.init(model: model, plateNumber: plateNumber, color: color)
+    }
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(model, forKey: .model)
@@ -44,4 +54,5 @@ extension Encodable {
         guard let data = try? JSONEncoder().encode(self) else { return nil }
         return try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
     }
+    
 }
