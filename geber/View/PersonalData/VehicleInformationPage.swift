@@ -42,7 +42,7 @@ struct VehicleInformationPage: View {
                                     Text("Name")
                                     Spacer()
                                     Text(viewModel.username)
-                                        .foregroundStyle(viewModel.username != viewModel.usernameDefault ? .primary : .secondary)
+                                        .foregroundStyle(viewModel.username != viewModel.usernameDefault ? .textPrimary : .secondary)
                                     Image(systemName: "chevron.right")
                                 }
                             }

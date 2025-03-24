@@ -1,7 +1,6 @@
 import Foundation
 import SwiftData
 
-@Model
 class HelpRequestModel: Identifiable, Encodable, Decodable{
     var id: String
     var timestamps: Date

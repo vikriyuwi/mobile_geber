@@ -4,69 +4,43 @@ import XCTest
 @MainActor
 final class SwiftDataServiceTests: XCTestCase {
     var service: SwiftDataService!
-
-    override func setUpWithError() throws {
+    
+    override func setUp() {
+        super.setUp()
         service = SwiftDataService.shared
     }
-
-    override func tearDownWithError() throws {
-        service = nil
+    
+    override func tearDown() {
+        service.removeAll(ofType: TestModel.self) // Clean up after each test
+        super.tearDown()
     }
     
-    func testAddAndFetchVehicle() {
-        let vehicle = VehicleModel(model: "Toyota Camry", plateNumber: "A 1111 BC", color: "Blue")
-        service.addVehicle(vehicle)
+    func testAddAndFetchObject() {
+        let testObject = TestModel(name: "Test")
+        service.add(testObject)
         
-        let vehicles = service.fetchVehicle()
-        service.removeVehicle(vehicle)
-        
-        XCTAssertTrue(vehicles.contains { $0.plateNumber == "A 1111 BC" })
+        let fetchedObjects = service.fetch() as [TestModel]
+        XCTAssertEqual(fetchedObjects.count, 1)
+        XCTAssertEqual(fetchedObjects.first?.name, "Test")
     }
     
-    func testRemoveVehicle() {
-        let vehicle = VehicleModel(model: "Honda Civic", plateNumber: "B 1945 IND", color: "Red")
-        service.addVehicle(vehicle)
-        service.removeVehicle(vehicle)
+    func testRemoveObject() {
+        let testObject = TestModel(name: "To be removed")
+        service.add(testObject)
         
-        let vehicles = service.fetchVehicle()
-        
-        XCTAssertFalse(vehicles.contains { $0.plateNumber == "B 1945 IND" })
+        service.remove(testObject)
+        let fetchedObjects = service.fetch() as [TestModel]
+        XCTAssertTrue(fetchedObjects.isEmpty)
     }
     
-    func testAddAndFetchHelpRequest() {
-        let helpRequest = HelpRequestModel(
-            timestamps: Date(),
-            name: "Vikri Yuwi",
-            location: "East Area",
-            detailLocation: "A01",
-            vehicle: VehicleModel(model: "Mio", plateNumber: "N 1234 G", color: "Red"))
-        service.addHelpRequest(helpRequest)
+    func testRemoveAllObjects() {
+        let testObject1 = TestModel(name: "First")
+        let testObject2 = TestModel(name: "Second")
+        service.add(testObject1)
+        service.add(testObject2)
         
-        let requests = service.fetchHelpRequests()
-        service.removeAllHelpRequest()
-        XCTAssertFalse(requests.isEmpty)
-    }
-    
-    func testRemoveAllHelpRequests() {
-        service.addHelpRequest(
-            HelpRequestModel(
-                timestamps: Date(),
-                name: "Vikri Yuwi",
-                location: "East Area",
-                detailLocation: "A01",
-                vehicle: VehicleModel(model: "Mio", plateNumber: "N 1234 G", color: "Red"))
-        )
-        service.addHelpRequest(
-            HelpRequestModel(
-                timestamps: Date(),
-                name: "Vikri Yuwi",
-                location: "West Area",
-                detailLocation: "B05",
-                vehicle: VehicleModel(model: "Beat", plateNumber: "N 1111 G", color: "Black"))
-        )
-        service.removeAllHelpRequest()
-        
-        let requests = service.fetchHelpRequests()
-        XCTAssertTrue(requests.isEmpty)
+        service.removeAll(ofType: TestModel.self)
+        let fetchedObjects = service.fetch() as [TestModel]
+        XCTAssertTrue(fetchedObjects.isEmpty)
     }
 }

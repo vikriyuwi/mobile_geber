@@ -66,7 +66,7 @@ struct HelpDetailView: View {
                                         .foregroundStyle(Color.textDark)
                                         .padding(.vertical, 4)
                                         .padding(.horizontal, 8)
-                                        .background(.primary)
+                                        .background(.textPrimary)
                                         .cornerRadius(10)
                                 }
                                 Text(viewModel.vehicleActive.plateNumber)

@@ -2,7 +2,7 @@ import SwiftData
 import Foundation
 
 @MainActor
-class SwiftDataService {
+class SwiftDataService: SwiftDataServiceProtocol {
     static let shared = SwiftDataService()
     
     private let container: ModelContainer
@@ -10,47 +10,35 @@ class SwiftDataService {
     
     private init() {
         do {
-            container = try ModelContainer(for: VehicleModel.self, HelpRequestModel.self)
+            container = try ModelContainer()
             context = container.mainContext
         } catch {
             fatalError("Failed to initialize SwiftData container: \(error)")
         }
     }
     
-    // Fetch Vehicles
-    func fetchVehicle() -> [VehicleModel] {
-        let fetchDescriptor = FetchDescriptor<VehicleModel>()
+    // Add an object
+    func add<T: PersistentModel>(_ object: T) {
+        context.insert(object)
+        saveContext()
+    }
+    
+    // Fetch all objects of a type
+    func fetch<T: PersistentModel>() -> [T] {
+        let fetchDescriptor = FetchDescriptor<T>()
         return (try? context.fetch(fetchDescriptor)) ?? []
     }
     
-    // Fetch Help Requests
-    func fetchHelpRequests() -> [HelpRequestModel] {
-        let fetchDescriptor = FetchDescriptor<HelpRequestModel>()
-        return (try? context.fetch(fetchDescriptor)) ?? []
-    }
-    
-    // Add Vehicle
-    func addVehicle(_ vehicle: VehicleModel) {
-        context.insert(vehicle)
+    // Remove a specific object
+    func remove<T: PersistentModel>(_ object: T) {
+        context.delete(object)
         saveContext()
     }
     
-    // Add Help Request
-    func addHelpRequest(_ helpRequest: HelpRequestModel) {
-        context.insert(helpRequest)
-        saveContext()
-    }
-    
-    // Remove Vehicle
-    func removeVehicle(_ vehicle: VehicleModel) {
-        context.delete(vehicle)
-        saveContext()
-    }
-    
-    // Remove All Help Requests
-    func removeAllHelpRequest() {
-        let requests = fetchHelpRequests()
-        requests.forEach { context.delete($0) }
+    // Remove all objects of a type
+    func removeAll<T: PersistentModel>(ofType type: T.Type) {
+        let objects = fetch() as [T]
+        objects.forEach { context.delete($0) }
         saveContext()
     }
     

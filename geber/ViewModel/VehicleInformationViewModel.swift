@@ -92,17 +92,17 @@ class VehicleInformationViewModel: ObservableObject {
     }
     
     public func loadVehicles() {
-        vehicles = dataSource.fetchVehicle()
+        vehicles = dataSource.fetch()
     }
     
     public func saveVehicle(_ model: String, _ plateNumber: String, _ color: String) {
         let vehicle = VehicleModel(model: model, plateNumber: plateNumber, color: color)
-        dataSource.addVehicle(vehicle)
+        dataSource.add(vehicle)
         loadVehicles()
     }
     
     public func removeVehicle(_ vehicle: VehicleModel) {
-        dataSource.removeVehicle(vehicle)
+        dataSource.remove(vehicle)
         loadVehicles()
     }
 }
