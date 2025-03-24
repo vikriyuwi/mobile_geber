@@ -6,12 +6,10 @@ class UserDefaultServiceTest: XCTestCase {
     let testKey = "testKey"
     
     override func setUpWithError() throws {
-        // Pastikan tidak ada nilai sebelumnya sebelum setiap tes dijalankan
         userDefaultService.remove(key: testKey)
     }
     
     override func tearDownWithError() throws {
-        // Hapus data setelah setiap tes
         userDefaultService.remove(key: testKey)
     }
     

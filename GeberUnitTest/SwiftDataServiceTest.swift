@@ -14,20 +14,23 @@ final class SwiftDataServiceTests: XCTestCase {
     }
     
     func testAddAndFetchVehicle() {
-        let vehicle = VehicleModel(model: "Toyota Camry", plateNumber: "ABC123", color: "Blue")
+        let vehicle = VehicleModel(model: "Toyota Camry", plateNumber: "A 1111 BC", color: "Blue")
         service.addVehicle(vehicle)
         
         let vehicles = service.fetchVehicle()
-        XCTAssertTrue(vehicles.contains { $0.plateNumber == "ABC123" })
+        service.removeVehicle(vehicle)
+        
+        XCTAssertTrue(vehicles.contains { $0.plateNumber == "A 1111 BC" })
     }
     
     func testRemoveVehicle() {
-        let vehicle = VehicleModel(model: "Honda Civic", plateNumber: "XYZ789", color: "Red")
+        let vehicle = VehicleModel(model: "Honda Civic", plateNumber: "B 1945 IND", color: "Red")
         service.addVehicle(vehicle)
         service.removeVehicle(vehicle)
         
         let vehicles = service.fetchVehicle()
-        XCTAssertFalse(vehicles.contains { $0.plateNumber == "XYZ789" })
+        
+        XCTAssertFalse(vehicles.contains { $0.plateNumber == "B 1945 IND" })
     }
     
     func testAddAndFetchHelpRequest() {
@@ -40,6 +43,7 @@ final class SwiftDataServiceTests: XCTestCase {
         service.addHelpRequest(helpRequest)
         
         let requests = service.fetchHelpRequests()
+        service.removeAllHelpRequest()
         XCTAssertFalse(requests.isEmpty)
     }
     
