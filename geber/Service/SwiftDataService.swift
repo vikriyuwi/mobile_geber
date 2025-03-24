@@ -10,7 +10,7 @@ class SwiftDataService: SwiftDataServiceProtocol {
     
     private init() {
         do {
-            container = try ModelContainer()
+            container = try ModelContainer(for: Schema([VehicleModel.self, TestModel.self]), configurations: ModelConfiguration(isStoredInMemoryOnly: false))
             context = container.mainContext
         } catch {
             fatalError("Failed to initialize SwiftData container: \(error)")

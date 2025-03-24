@@ -23,7 +23,7 @@ struct geberApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([VehicleModel.self]) // Register the model
+        let schema = Schema([VehicleModel.self, TestModel.self]) // Register the model
         let config = ModelConfiguration(isStoredInMemoryOnly: false) // Persistent storage
         return try! ModelContainer(for: schema, configurations: config)
     }()

@@ -3,11 +3,10 @@ import XCTest
 
 @MainActor
 final class SwiftDataServiceTests: XCTestCase {
-    var service: SwiftDataService!
+    var service: SwiftDataService = SwiftDataService.shared
     
     override func setUp() {
         super.setUp()
-        service = SwiftDataService.shared
     }
     
     override func tearDown() {
@@ -18,8 +17,8 @@ final class SwiftDataServiceTests: XCTestCase {
     func testAddAndFetchObject() {
         let testObject = TestModel(name: "Test")
         service.add(testObject)
+        let fetchedObjects:[TestModel] = service.fetch() as [TestModel]
         
-        let fetchedObjects = service.fetch() as [TestModel]
         XCTAssertEqual(fetchedObjects.count, 1)
         XCTAssertEqual(fetchedObjects.first?.name, "Test")
     }

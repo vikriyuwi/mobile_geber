@@ -6,6 +6,10 @@ class VehicleInformationViewModelTests: XCTestCase {
     
     var viewModel: VehicleInformationViewModel!
     var mockUserDefaults: MockUserDefaultService!
+    var swiftDataService: SwiftDataService = SwiftDataService.shared
+    
+    var v1 = VehicleModel(model: "Test vehicle", plateNumber: "A 1111 XC", color: "Red")
+    var v2 = VehicleModel(model: "Test vehicle2", plateNumber: "A 1111 XC", color: "Red")
     
     override func setUp() {
         super.setUp()
@@ -16,6 +20,8 @@ class VehicleInformationViewModelTests: XCTestCase {
     override func tearDown() {
         viewModel = nil
         mockUserDefaults = nil
+        swiftDataService.remove(v1)
+        swiftDataService.remove(v2)
         super.tearDown()
     }
     
@@ -48,5 +54,25 @@ class VehicleInformationViewModelTests: XCTestCase {
         XCTAssertNil(mockUserDefaults.savedData["vehicleModelActive"])
         XCTAssertNil(mockUserDefaults.savedData["vehiclePlateNumberActive"])
         XCTAssertNil(mockUserDefaults.savedData["vehicleColorActive"])
+    }
+    
+    func testLoadVehicles() {
+        swiftDataService.add(v1)
+        swiftDataService.add(v2)
+        viewModel.loadVehicles()
+        XCTAssertEqual(viewModel.vehicles.count, 2)
+    }
+        
+    func testSaveVehicle() {
+        viewModel.saveVehicle("Test vehicle", "A 1111 XC", "Red")
+        XCTAssertEqual(viewModel.vehicles.count, 1)
+        XCTAssertEqual(viewModel.vehicles.first?.model, "Test vehicle")
+    }
+        
+    func testRemoveVehicle() {
+        let firstCount = viewModel.vehicles.count
+        swiftDataService.add(v1)
+        viewModel.removeVehicle(v1)
+        XCTAssertEqual(firstCount, viewModel.vehicles.count)
     }
 }
